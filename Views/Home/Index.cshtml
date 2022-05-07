@@ -1,0 +1,24 @@
+﻿@model EpisodeInfo
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">What Time Is EastEnders On Tonight?</h1>
+    @{
+        if (@Model != null && !string.IsNullOrWhiteSpace(@Model.StartTime))
+        {
+            <p>@Model.StartTime</p>
+
+            if (@Model.Synopsis != null)
+            {
+                <p>@Model.Synopsis</p>
+            }
+        }
+        else
+        {
+            // Show error markup 
+            <p>An error occurred</p>
+        }
+    }
+</div>
