@@ -4,6 +4,6 @@ namespace WhatTimeIsEastEndersOnTonight.Services
 {
     public interface IBbcService
     {
-        Task<EpisodeInfo?> GetEastEndersEpisodeInfo();
+        Task<EpisodeInfo?> GetEastEndersEpisodeInfoAsync();
     }
 }

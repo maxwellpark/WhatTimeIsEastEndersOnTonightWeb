@@ -11,12 +11,14 @@ namespace WhatTimeIsEastEndersOnTonight.Controllers
         public HomeController(IBbcService bbcService, ILogger<HomeController> logger)
         {
             _bbcService = bbcService ?? throw new ArgumentNullException(nameof(bbcService));
-            _logger = logger;
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
         public async Task<IActionResult> Index()
         {
-            var episodeInfo = await _bbcService.GetEastEndersEpisodeInfo();
+            _logger.LogInformation("Request received at Home Page.");
+
+            var episodeInfo = await _bbcService.GetEastEndersEpisodeInfoAsync();
             return View(episodeInfo);
         }
     }

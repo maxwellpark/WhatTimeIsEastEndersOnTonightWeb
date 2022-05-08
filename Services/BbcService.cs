@@ -1,31 +1,47 @@
 ﻿using Fizzler.Systems.HtmlAgilityPack;
 using HtmlAgilityPack;
 using WhatTimeIsEastEndersOnTonight.Models;
-using WhatTimeIsEastEndersOnTonight.Services;
 
-namespace WhatTimeIsEastEndersOn.Services
+namespace WhatTimeIsEastEndersOnTonight.Services
 {
     public class BbcService : IBbcService
     {
-        private readonly string _url = "https://www.bbc.co.uk/iplayer/guide";
-        private readonly HttpClient _httpClient = new(); // Todo: HttpClientFactory
+        private readonly string _scheduleUrl = "https://www.bbc.co.uk/iplayer/guide";
+        private readonly IHttpClientFactory _httpClientFactory;
+        private readonly HttpClient _httpClient;
+        private readonly ILogger<BbcService> _logger;
+        private static readonly string _scheduleItemSelector = ".schedule-item";
 
-        public BbcService()
+        public BbcService(IHttpClientFactory httpClientFactory, ILogger<BbcService> logger)
         {
+            _httpClientFactory = httpClientFactory ?? throw new ArgumentNullException(nameof(httpClientFactory));
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+
+            _httpClient = _httpClientFactory.CreateClient();
             _httpClient.DefaultRequestHeaders.Add("Accept", "*/*");
             _httpClient.DefaultRequestHeaders.Add("Connection", "keep-alive");
         }
 
-        public async Task<EpisodeInfo?> GetEastEndersEpisodeInfo()
+        public async Task<EpisodeInfo?> GetEastEndersEpisodeInfoAsync()
         {
-            var html = await GetScheduleHtmlString();
+            var html = await GetScheduleHtmlStringAsync();
+
+            if (string.IsNullOrWhiteSpace(html))
+            {
+                _logger.LogError("Missing HTML string. Unable to parse.");
+                return null;
+            }
+
             var document = new HtmlDocument();
             document.LoadHtml(html);
 
-            var scheduleItems = document.DocumentNode.QuerySelectorAll(".schedule-item");
+            var scheduleItems = document.DocumentNode.QuerySelectorAll(_scheduleItemSelector);
 
             if (scheduleItems == null || !scheduleItems.Any())
+            {
+                _logger.LogInformation("No Schedule Items found in iplayer HTML. Query selector: " + _scheduleItemSelector);
                 return null;
+            }
 
             var episodeInfo = new EpisodeInfo();
 
@@ -47,18 +63,24 @@ namespace WhatTimeIsEastEndersOn.Services
                 if (synopsis != null)
                     episodeInfo.Synopsis = synopsis.InnerText;
             }
+
+            if (episodeInfo.StartTime == null)
+                _logger.LogWarning("Could not find EastEnders start time. Either it's not on or the parsing is incorrect.");
+
             return episodeInfo;
         }
 
-        private async Task<string> GetScheduleHtmlString()
+        private async Task<string> GetScheduleHtmlStringAsync()
         {
-            var response = await _httpClient.GetAsync(_url);
+            var response = await _httpClient.GetAsync(_scheduleUrl);
 
             if (response.IsSuccessStatusCode)
             {
                 var content = await response.Content.ReadAsStringAsync();
                 return content;
             }
+
+            _logger.LogError("Unable to get iplayer schedule. Request failed with status code: " + response.StatusCode);
             return string.Empty;
         }
     }

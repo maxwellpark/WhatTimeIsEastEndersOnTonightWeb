@@ -1,11 +1,11 @@
-using WhatTimeIsEastEndersOn.Services;
 using WhatTimeIsEastEndersOnTonight.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddTransient<IBbcService, BbcService>();
 builder.Services.AddControllersWithViews();
+builder.Services.AddHttpClient();
+builder.Services.AddTransient<IBbcService, BbcService>();
 
 var app = builder.Build();
 
