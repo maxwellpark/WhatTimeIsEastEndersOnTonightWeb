@@ -1,9 +1,7 @@
 ﻿using WhatTimeIsEastEndersOnTonight.Models;
 
-namespace WhatTimeIsEastEndersOnTonight.Services
+namespace WhatTimeIsEastEndersOnTonight.Services;
+public interface IBbcService
 {
-    public interface IBbcService
-    {
-        Task<EpisodeInfo?> GetEastEndersEpisodeInfoAsync();
-    }
+    Task<EpisodeInfo?> GetEastEndersEpisodeInfoAsync();
 }
