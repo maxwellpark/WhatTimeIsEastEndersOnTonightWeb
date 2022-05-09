@@ -12,7 +12,7 @@
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">What Time Is EastEnders On Tonight?</a>
+                <a class="navbar-brand" asp-controller="Home" asp-action="Index">What Time Is EastEnders On Tonight?</a><span class="date-text">@DateTime.Now.ToString("dd'/'MM'/'yyyy")</span>
             </div>
         </nav>
     </header>
