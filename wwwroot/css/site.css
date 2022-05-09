@@ -16,3 +16,17 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+.time-text {
+    color: #86B049;
+    font-size: 8rem;
+}
+
+.not-on-text {
+    color: #F1DDDF;
+    font-size: 2rem;
+}
+
+.synopsis-text {
+    font-size: 2rem;
+}

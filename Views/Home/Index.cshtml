@@ -8,16 +8,16 @@
     @{
         if (@Model != null && !string.IsNullOrWhiteSpace(@Model.StartTime))
         {
-            <p>@Model.StartTime</p>
+            <p class="time-text">@Model.StartTime</p>
 
             if (@Model.Synopsis != null)
             {
-                <p>@Model.Synopsis</p>
+                <p class="synopsis-text">@Model.Synopsis</p>
             }
         }
         else
         {
-            <p>EastEnders is not on tonight.</p>
+            <p class="not-on-text">EastEnders is not on tonight.</p>
         }
     }
 </div>
