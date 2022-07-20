@@ -71,7 +71,7 @@ namespace WhatTimeIsEastEndersOnTonight.Services
 
         private async Task<string> GetScheduleHtmlStringAsync()
         {
-            var url = GetScheduleUrl(2);
+            var url = GetScheduleUrl("bbctwo");
             var response = await _httpClient.GetAsync(url);
 
             if (response.IsSuccessStatusCode)
@@ -84,12 +84,9 @@ namespace WhatTimeIsEastEndersOnTonight.Services
             return string.Empty;
         }
 
-        private static string GetScheduleUrl(int channel)
+        private static string GetScheduleUrl(string slug = "")
         {
-            if (channel < 1 || channel > 2)
-                throw new ArgumentException("Invalid channel input");
-
-            return channel == 1 ? "https://www.bbc.co.uk/iplayer/guide" : "https://www.bbc.co.uk/iplayer/guide/bbctwo";
+            return "https://www.bbc.co.uk/iplayer/guide/" + slug;
         }
     }
 }
