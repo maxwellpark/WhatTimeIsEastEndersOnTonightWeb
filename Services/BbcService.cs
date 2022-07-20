@@ -6,7 +6,6 @@ namespace WhatTimeIsEastEndersOnTonight.Services
 {
     public class BbcService : IBbcService
     {
-        private readonly string _scheduleUrl = "https://www.bbc.co.uk/iplayer/guide";
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly HttpClient _httpClient;
         private readonly ILogger<BbcService> _logger;
@@ -72,7 +71,8 @@ namespace WhatTimeIsEastEndersOnTonight.Services
 
         private async Task<string> GetScheduleHtmlStringAsync()
         {
-            var response = await _httpClient.GetAsync(_scheduleUrl);
+            var url = GetScheduleUrl(2);
+            var response = await _httpClient.GetAsync(url);
 
             if (response.IsSuccessStatusCode)
             {
@@ -82,6 +82,14 @@ namespace WhatTimeIsEastEndersOnTonight.Services
 
             _logger.LogError("Unable to get iplayer schedule. Request failed with status code: " + response.StatusCode);
             return string.Empty;
+        }
+
+        private static string GetScheduleUrl(int channel)
+        {
+            if (channel < 1 || channel > 2)
+                throw new ArgumentException("Invalid channel input");
+
+            return channel == 1 ? "https://www.bbc.co.uk/iplayer/guide" : "https://www.bbc.co.uk/iplayer/guide/bbctwo";
         }
     }
 }
