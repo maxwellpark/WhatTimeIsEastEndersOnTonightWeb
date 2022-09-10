@@ -23,7 +23,19 @@ namespace WhatTimeIsEastEndersOnTonight.Services
 
         public async Task<EpisodeInfo?> GetEastEndersEpisodeInfoAsync()
         {
-            var html = await GetScheduleHtmlStringAsync();
+            var episodeInfo = await GetEastEndersEpisodeInfoByChannelAsync("bbcone");
+
+            if (episodeInfo?.StartTime == null)
+                return episodeInfo;
+
+            // Check BBC 2 in case programme has moved from BBC 1
+            episodeInfo = await GetEastEndersEpisodeInfoByChannelAsync("bbctwo");
+            return episodeInfo;
+        }
+
+        private async Task<EpisodeInfo?> GetEastEndersEpisodeInfoByChannelAsync(string channel)
+        {
+            var html = await GetScheduleHtmlStringAsync(slug: channel);
 
             if (string.IsNullOrWhiteSpace(html))
             {
@@ -69,9 +81,9 @@ namespace WhatTimeIsEastEndersOnTonight.Services
             return episodeInfo;
         }
 
-        private async Task<string> GetScheduleHtmlStringAsync()
+        private async Task<string> GetScheduleHtmlStringAsync(string slug = "")
         {
-            var url = GetScheduleUrl("bbctwo");
+            var url = GetScheduleUrl(slug);
             var response = await _httpClient.GetAsync(url);
 
             if (response.IsSuccessStatusCode)
