@@ -50,7 +50,7 @@ namespace WhatTimeIsEastEndersOnTonight.Services
 
             if (scheduleItems == null || !scheduleItems.Any())
             {
-                _logger.LogInformation("No Schedule Items found in iplayer HTML. Query selector: " + _scheduleItemSelector);
+                _logger.LogWarning("No Schedule Items found in iplayer HTML. Query selector: " + _scheduleItemSelector);
                 return null;
             }
 
@@ -67,12 +67,16 @@ namespace WhatTimeIsEastEndersOnTonight.Services
                 var startTime = item.QuerySelector(".schedule-item__start-time");
 
                 if (startTime != null)
+                {
                     episodeInfo.StartTime = startTime.InnerText;
 
-                var synopsis = item.QuerySelector("p.list-content-item__synopsis");
+                    var synopsis = item.QuerySelector("p.list-content-item__synopsis");
 
-                if (synopsis != null)
-                    episodeInfo.Synopsis = synopsis.InnerText;
+                    if (synopsis != null)
+                        episodeInfo.Synopsis = synopsis.InnerText;
+
+                    return episodeInfo;
+                }
             }
 
             if (episodeInfo.StartTime == null)
