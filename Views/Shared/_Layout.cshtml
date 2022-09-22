@@ -24,8 +24,11 @@
     </div>
 
     <footer class="border-top footer text-muted">
+        @{
+            var year = DateTime.Now.Year;
+        }
         <div class="container">
-            &copy; 2022 - WhatTimeIsEastEndersOnTonight - Max 
+            &copy; @year - WhatTimeIsEastEndersOnTonight - Max - <a target="_blank" href="https://github.com/maxwellpark/WhatTimeIsEastEndersOnTonightWeb">See code on GitHub</a>
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
