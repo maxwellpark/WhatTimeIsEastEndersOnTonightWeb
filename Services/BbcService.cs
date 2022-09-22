@@ -25,7 +25,7 @@ namespace WhatTimeIsEastEndersOnTonight.Services
         {
             var episodeInfo = await GetEastEndersEpisodeInfoByChannelAsync("bbcone");
 
-            if (episodeInfo?.StartTime == null)
+            if (episodeInfo?.StartTime != null)
                 return episodeInfo;
 
             // Check BBC 2 in case programme has moved from BBC 1
